@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Fily</title>
+
+    <link rel="stylesheet" href="../style/bootstrap.css">
+    <link rel="stylesheet" href="../style/global.css">
+    <link rel="stylesheet" href="../style/base.css">
+    <link rel="stylesheet" href="../style/titlebar.css">
+    <link rel="stylesheet" href="../style/list.css">
+    <link rel="stylesheet" href="../style/font-awesome.css">
+    <style>
+        @font-face {
+            font-family: 'muyaosuixin';
+            src: url('../fonts/沐瑶随心手写体.ttf');
+        }
+    </style>
+
+
+</head>
+
+<body style="display: flex; flex-direction: column; margin-bottom: 30px;">
+    <!-- <div id="notifications"></div> -->
+    <nav id="navbar" style="background-color: #777888;">
+        <div class="nav-group">
+            <!-- <button id="back"><img src="../resource/images/left.svg"></button>
+            <button id="forward"><img src="../resource/images/right.svg"></button> -->
+            <button id="refresh" onclick="window.location.reload()"><img src="../resource/images/refresh.svg"></button>
+            <!-- <button id="home"><img src="../resource/images/home.svg"></button> -->
+        </div>
+
+        <div id="drag-region"></div>
+
+        <div style="display: flex; align-items: center; justify-content: center">
+            <span style="font-weight: 600; font-size: 22px; font-family: 'Bauhaus 93';">Fily</span>
+            <span style="font-weight: 900; font-size: 22px; font-family: '幼圆';" id="projectTitle"></span>
+        </div>
+
+        <!-- <div id="nav-center">
+        <button id="site-info">
+          <img src="../resource/images/lock.svg">
+        </button>
+        
+        <input id="url" spellcheck="false" autocomplete="false" autofocus type="text" placeholder="Search Google or type URL">
+
+        <button id="bookmark">
+          <img src="../resource/images/bookmark.svg">
+        </button>
+      </div> -->
+
+        <div id="drag-region"></div>
+
+        <div id="window-controls">
+            <div class="button" id="min-button">
+                <svg version="1.1" viewBox="0 0 24 24">
+            <path d="M20,19H4v-2h16V19z"/>
+          </svg>
+            </div>
+            <div class="button" id="max-button">
+                <svg version="1.1" viewBox="0 0 24 24">
+            <path d="M18.8,4H5.2C4.6,4,4,4.6,4,5.2v13.5C4,19.4,4.6,20,5.2,20h13.5c0.7,0,1.2-0.6,1.2-1.2V5.2C20,4.6,19.4,4,18.8,4
+            	z M18,18H6V6h12V18z"/>
+          </svg>
+            </div>
+            <div class="button" id="restore-button">
+                <svg version="1.1" viewBox="0 0 24 24">
+            <path d="M4,8H8V4H20V16H16V20H4V8M16,8V14H18V6H10V8H16M6,12V18H14V12H6Z"/>
+          </svg>
+            </div>
+            <div class="button" id="close-button">
+                <svg version="1.1" viewBox="0 0 24 24">
+            <path d="M20,5.6L18.4,4L12,10.4L5.6,4L4,5.6l6.4,6.4L4,18.4L5.6,20l6.4-6.4l6.4,6.4l1.6-1.6L13.6,12L20,5.6z"/>
+          </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- <header id="titlebar">
+      <div id="tabs">
+        <div id="new-tab" title="New tab">
+          <img src="../resource/images/plus.svg" title="New tab">
+        </div>
+      </div>
+
+    </header> -->
+    <!-- style="font-family: muyaosuixin; font-size: 21px; font-weight: 500;" -->
+    <div class="main-container" style="display: flex; flex-direction: row;">
+        <div class="projlist" style="display: flex; flex-direction: column; padding-bottom: 20px; margin-bottom: 20px;">
+            
+            <div style="overflow-y: auto; overflow-x:hidden; width: 100%;">
+                <ul>
+                </ul>
+            </div>
+            <div style="height: 30px; width: 100%;">
+                <div onclick="showCreateProjectDialog()" style="height: 100%; text-align: center; background-color: #fff; line-height: 30px; cursor: pointer;">
+                    <a href="javascript:void(0)" style="cursor: pointer;"><i class="fa fa-plus-square-o fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="projitems" style="display: flex; flex-direction: column;">
+        </div>
+        <div class="modalBox" id="importFiles">
+            <div style="margin: 20px; font-family: '华文中宋'; height: 90%; overflow-y: auto;">
+                <table class="table table-responsive" style="text-align: left; padding-left: 15px; font-size: 14px;">
+                    <tr id="table-header">
+                        <th></th>
+                        <th>文件名</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="import-ctrl-btn" style="position:absolute; bottom: 30px; right: 30px;">
+                <button type="button" class="btn btn-danger cancel">取消</button>
+                <button type="button" class="btn btn-success import">导入</button>
+            </div>
+        </div>
+        <div class="modalBox" id="createProject" style="height: 150px;">
+            <input type="text" class="form-control" id="projectName" placeholder="输入项目名称">
+            <input type="hidden" id="oldProjectName" />
+            <div class="import-ctrl-btn" style="position:absolute; bottom: 30px; right: 30px;">
+                <button type="button" class="btn btn-danger cancel">取消</button>
+                <button type="button" class="btn btn-success">保存</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../script/jquery.min.js"></script>
+<script>
+    if (typeof module === 'object') {
+        window.jQuery = window.$ = module.exports;
+    }
+</script>
+<script src="../script/time.js"></script>
+<script src="../script/project-list.js"></script>
+<script src="../script/bootstrap.js"></script>
+<script>
+    // let renderer = require('./renderer.js');
+    let titlebar = require('../script/titlebar.js');
+
+    const {
+        extensionToIcon
+    } = require('../script/constants.js');
+
+    const {
+        listAllProjects,
+        saveProject,
+        getProjectByProjectName,
+        listAllFilesOfProject,
+        addProjectFile,
+        saveFileComment,
+        deleteProjectFile,
+        updateProjectName,
+        deleteProject,
+        changeFilePinStatus
+    } = require('../script/persist.js');
+
+
+    console.log(extensionToIcon['pdf']);
+</script>
+
+</html>

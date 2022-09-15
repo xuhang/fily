@@ -1,0 +1,87 @@
+* { margin:0; padding:0;}
+
+ul, li { 
+    list-style: none;
+}
+
+a { 
+    text-decoration: none;
+}
+
+nav ul li { float:left;}
+
+nav ul li a { width:80px; height:40px; text-align:center; line-height:40px; display:block; border-right:2px solid #ccc; background:#eee; color:#666;}
+
+nav ul li a:hover{ color:#f00; }
+
+nav ul li ul { position:absolute;}
+
+nav ul li ul li { float:none;}
+
+nav ul li ul li a { border-right:none; border-top:1px dotted #ccc; background:#f5f5f5;}
+
+nav ul li ul { position:absolute; display:none;}
+
+nav ul li ul li { float:none;}
+
+nav ul li ul li a { border-right:none; border-top:1px dotted #ccc; background:#f5f5f5;}
+
+nav ul li:hover ul{ display:block; }
+
+body {
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: block;
+}
+
+nav {
+    margin-bottom: 0!important;
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    top: 0;
+    border-width: 0 0 1px;
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    height: 40px;
+    line-height: 40px;
+}
+
+nav > div > span {
+    margin: auto 5px;
+}
+
+
+div.drag_and_drop {
+    width: 100%; 
+    height:300px; 
+    margin-top: 30px;
+}
+
+#file_drop_area {
+    border: 1px dotted; 
+    width: 100%; 
+    height: 100%
+}
+
+#content_display {
+    border: 1px stashed; 
+    width: 100%; 
+    height: 100%;
+}
+
+.ctrl_bar > div {
+    width: 15px;
+    height: 15px;
+    /* border: 1px solid; */
+    display: inline-block;
+}
+::-webkit-scrollbar {width:8px; height:8px}
+::-webkit-scrollbar-button {width:8px;height:0}
+::-webkit-scrollbar-track {background:0 0}
+::-webkit-scrollbar-thumb {background:#61a8df;-webkit-transition:.3s;transition:.3s}
+::-webkit-scrollbar-thumb:hover {background-color:#37dace}
+::-webkit-scrollbar-thumb:active {background-color:#17bbaf}

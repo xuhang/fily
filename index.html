@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/font-awesome.min.css">
+    <link rel="stylesheet" href="./style/index.css">
+    <link rel="icon" href="./img/icon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="./img/icon.ico" type="image/x-icon" />
+    <style>
+
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <nav style="-webkit-app-region: drag;" id="clickThroughElement">
+        <div style="float: left; -webkit-app-region: no-drag;">
+            <ul>
+                <li><a href="javascript:void(0);">文件</a>
+                    <ul>
+                        <li><a href="javascript:void(0);">新建</a></li>
+                        <li><a href="javascript:void(0);">打开</a></li>
+                        <li><a href="javascript:void(0);">另存为</a></li>
+                    </ul>
+                </li>
+                <li><a href="javascript:void(0);">编辑</a>
+                    <ul>
+                        <li><a href="javascript:void(0);">复制</a></li>
+                        <li><a href="javascript:void(0);">剪切</a></li>
+                        <li><a href="javascript:void(0);">粘贴</a></li>
+                    </ul>
+                </li>
+                <li><a href="javascript:void(0);">选择</a>
+                    <ul>
+                        <li><a href="javascript:void(0);">全选</a></li>
+                    </ul>
+                </li>
+                <li><a href="javascript:void(0);">查看</a>
+                    <ul>
+                        <li><a href="javascript:void(0);">搜索</a></li>
+                        <li><a href="javascript:void(0);">输出</a></li>
+                        <li><a href="javascript:void(0);">控制台</a></li>
+                    </ul>
+                </li>
+                <li><a href="javascript:void(0);">帮助</a>
+                    <ul>
+                        <li><a id="openPdfFile" href="javascript:void(0);">打开电子书</a></li>
+                        <li><a id="changeView" href="javascript:void(0);">切换视图</a></li>
+                        <li><a href="javascript:void(0);">检查更新</a></li>
+                        <li><a href="javascript:void(0);">关于</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div style="float: right; -webkit-app-region: no-drag;">
+            <span id="minimize_btn"><i class="fa fa-window-minimize" aria-hidden="true"></i></span>
+            <span id="restore_btn"><i class="fa fa-window-restore" aria-hidden="true"></i></span>
+            <span id="close_btn"><i class="fa fa-window-close" aria-hidden="true"></i></span>
+            <span id="notify_btn"><i class="fa fa-bell" aria-hidden="true"></i></span>
+        </div>
+    </nav>
+
+    <div id="gallery">
+        <img id="gallery_image" src="./resource/pics/1.jpeg" style="width: 150px; height: 150px;" alt="">
+    </div>
+
+    <div>
+        <img id='ctimg' src="./resource/pics/472801/24494511.dcm.jpeg" alt="">
+    </div>
+
+    <div id="music_container" style="display: none">
+        <radio id="music_radio" src="" crossorigin="anonymous">
+            </audio>
+    </div>
+
+    <div class="drag_and_drop">
+        <div id="file_drop_area"></div>
+    </div>
+
+    <div style="width: 100%; height:300px">
+        <div id="content_display"></div>
+    </div>
+
+    <script type="text/javascript" src="./script/constants.js"></script>
+    <script type="text/javascript" src="./script/main.js"></script>
+</body>
+
+</html>
