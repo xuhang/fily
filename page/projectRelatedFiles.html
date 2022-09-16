@@ -24,6 +24,8 @@
 
 <body style="display: flex; flex-direction: column; margin-bottom: 30px;">
     <!-- <div id="notifications"></div> -->
+
+    <!-- 顶部控制区域 START -->
     <nav id="navbar" style="background-color: #777888;">
         <div class="nav-group">
             <!-- <button id="back"><img src="../resource/images/left.svg"></button>
@@ -77,6 +79,7 @@
             </div>
         </div>
     </nav>
+    <!-- 顶部控制区域 END -->
 
     <!-- <header id="titlebar">
       <div id="tabs">
@@ -88,8 +91,8 @@
     </header> -->
     <!-- style="font-family: muyaosuixin; font-size: 21px; font-weight: 500;" -->
     <div class="main-container" style="display: flex; flex-direction: row;">
+        <!-- 左侧项目列表 START -->
         <div class="projlist" style="display: flex; flex-direction: column; padding-bottom: 20px; margin-bottom: 20px;">
-            
             <div style="overflow-y: auto; overflow-x:hidden; width: 100%;">
                 <ul>
                 </ul>
@@ -100,10 +103,13 @@
                 </div>
             </div>
         </div>
-        <div class="projitems" style="display: flex; flex-direction: column;">
+        <!-- 左侧项目列表 END -->
+        <!-- 右侧项目文件列表 START -->
+        <div class="projitems" style="display: flex; flex-wrap: wrap; overflow-y: auto; overflow-x:hidden;">
         </div>
+        <!-- 右侧项目文件列表 END -->
         <div class="modalBox" id="importFiles">
-            <div style="margin: 20px; font-family: '华文中宋'; height: 90%; overflow-y: auto;">
+            <div style="margin: 20px; font-family: '华文中宋'; height: 90%; overflow-y: scroll;">
                 <table class="table table-responsive" style="text-align: left; padding-left: 15px; font-size: 14px;">
                     <tr id="table-header">
                         <th></th>

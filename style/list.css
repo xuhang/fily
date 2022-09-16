@@ -7,6 +7,14 @@
     --item-border: rgba(173, 175, 180, 0.856);
 }
 
+@media (prefers-color-scheme: dark) {
+    body { background: #333; color: white; }
+}
+  
+@media (prefers-color-scheme: light) {
+    body { background: #ddd; color: black; }
+}
+
 div.main-container {
     position: fixed;
     top: 40px;
@@ -225,7 +233,7 @@ div.projitems {
 div.item-wrapper {
     display: flex;
     /* height: 35px; */
-    width: 95%;
+    width: 100%;
     border: 2px solid var(--item-border);
     border-radius: 10px;
     margin: 10px 20px;

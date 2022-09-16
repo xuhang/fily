@@ -2,6 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const remote = require('electron').remote || require('@electron/remote');
+const { ipcRenderer } = require('electron');
 
 var tabCount;
 var showAlert;
@@ -56,7 +57,10 @@ function init() {
 				// app.quit();
 				win = remote.getCurrentWindow();
 
-				let closeWindow = function () { win.close(); };
+				let closeWindow = function () { 
+					ipcRenderer.send('close-window', { '_src': 'X button from right corner.' });
+					// win.close(); 
+				};
 				if(document.title == 'Peacock Main Window') closeWindow = function () { remote.app.quit(); };
 
 				let tc;

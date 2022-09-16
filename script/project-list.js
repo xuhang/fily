@@ -128,6 +128,7 @@ $('.projitems').on('click', '.glyphicon-trash', function(e) {
         let filename = wrapper.find('.filename').text().trim();
         deleteProjectFile(currentProject, filename);
         wrapper.remove();
+        ipcRenderer.send('show-notification', {'title': '删除成功', 'message': filename+' 文件已删除'});
     }
 })
 
@@ -167,12 +168,14 @@ $('.modalBox').on('click', '.update', function() {
     let projectName = $('#projectName').val().trim();
     addProject(projectName, 2, oldProjectName);
     toggleClass(0)
+    ipcRenderer.send('show-notification', {'title': '更新成功', 'message': projectName+' 项目已更新'});
 });
 
 $('.modalBox').on('click', '.create', function() {
     let projectName = $('#projectName').val().trim();
     addProject(projectName, 1);
     toggleClass(0)
+    ipcRenderer.send('show-notification', {'title': '创建成功', 'message': projectName+' 项目已创建'});
 });
 
 
@@ -180,6 +183,7 @@ $('.modalBox').on('click', '.create', function() {
 // 导入已选文件
 $('.modalBox .import').on('click', function() {
     let tableRows = $('#importFiles table tr');
+    let count = 0;
     for (let i = 1; i < tableRows.length; i++) {
         if ($(tableRows[i]).find('input')[0].checked) {
             let chosenFilename = $(tableRows[i]).find('input').val();
@@ -187,6 +191,7 @@ $('.modalBox .import').on('click', function() {
                 if (ele.filename === chosenFilename) {
                     addFileItem(ele);
                     addProjectFile(currentProject, ele);
+                    count++;
                 }
             });
         }
@@ -194,6 +199,7 @@ $('.modalBox .import').on('click', function() {
     $('.modalBox').css('display', 'none')
     toggleClass(0)
     clearAllFiles();
+    ipcRenderer.send('show-notification', {'title': '导入成功', 'message': count + ' 个文件已导入'});
 });
 
 $(function() {
@@ -358,7 +364,6 @@ function addFileItem(data) {
     `;
 
     $('.projitems').append($(html));
-
 }
 
 

@@ -2,6 +2,7 @@ const os = require('os');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync(path.join(os.homedir(), 'fily-projects.json'));
+const { ipcRenderer } = require('electron');
 
 const db = low(adapter);
 const TB_NAME = 'projects';

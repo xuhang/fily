@@ -1,4 +1,6 @@
-const { app, BrowserWindow, Menu, Tray, Notification, shell, ipcMain, globalShortcut, dialog, desktopCapturer } = require('electron');
+const { app, BrowserWindow, Menu, Tray, Notification, 
+    shell, ipcMain, globalShortcut, dialog, 
+    desktopCapturer, nativeTheme } = require('electron');
 const path = require('path');
 const child_process = require('child_process')
 const fs = require('fs');
@@ -65,6 +67,19 @@ ipcMain.on('set-ignore-mouse-events', (event, ...args) => {
     BrowserWindow.fromWebContents(event.sender).setIgnoreMouseEvents(...args)
 })
 
+ipcMain.handle('dark-mode:toggle', () => {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+})
+
+ipcMain.handle('dark-mode:system', () => {
+    nativeTheme.themeSource = 'system'
+})
+
 ipcMain.on('window-ctrl', (event, data) => {
     let opt = data['_op'];
     switch (opt) {
@@ -81,20 +96,34 @@ ipcMain.on('window-ctrl', (event, data) => {
     }
 })
 
+ipcMain.on('show-notification', (event, data) => {
+    const notification = {
+        appId: "com.xuhang.electron.demo",
+        icon: path.join(__dirname, './img/icon_512x512.png'),
+        title: data.title || 'Fily 通知',
+        body: data.message || data
+    }
+    new Notification(notification).show()
+})
+
 
 ipcMain.on('close-window', (event, data) => {
     console.log('closing window ' + data['_src']);
 
+    if (!Notification.isSupported()) {
+        console.log('当前系统不支持通知');
+    }
     app.setAppUserModelId("我的Electorn示例")
     const notification = {
         appId: "com.xuhang.electron.demo",
-        icon: path.join(__dirname, './img/icon.ico'),
+        icon: path.join(__dirname, './img/icon_512x512.png'),
         title: '正在关闭……',
         body: '程序将在2秒后自动关闭ヾ(•ω•`)o'
     }
     new Notification(notification).show()
 
     setTimeout(() => {
+        console.log('fily is exiting ...')
         app.quit();
     }, 2000);
 
@@ -156,6 +185,21 @@ function createWindow() {
     })
     remoteMain.initialize()
     remoteMain.enable(win.webContents);
+
+    if (systemType === "Darwin") {
+        app.dock.setIcon(path.join(__dirname, './img/icon_512x512.png'));
+        // win.on('blur', function() {
+        //     const badgeString = app.dock.getBadge();
+        //     if (badgeString === '') {
+        //         app.dock.setBadge('1');
+        //     } else {
+        //         app.docker.setBadge((parseInt(badgeString)+1).toString());
+        //     }
+        // });
+        setTimeout(function() {
+            app.dock.bounce();
+        }, 3000)
+    }
 
     // win.setIgnoreMouseEvents(true)
     // win.maximize()
