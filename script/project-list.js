@@ -4,6 +4,14 @@ const remote = require('electron').remote || require('@electron/remote');
 const fs = require('fs');
 const path = require('path');
 
+ipcRenderer.on('new-project-dialog', (event, data) => {
+    showCreateProjectDialog();
+})
+
+ipcRenderer.on('focus-on-project', (event, data) => {
+    focusProject(data['projectName']);
+})
+
 
 let currentProject = undefined;
 // 项目列表
@@ -416,6 +424,15 @@ function addImportItems(data) {
             colExtensions[d.extension] = [d];
         }
     }
+}
+
+function focusProject(projectName) {
+    $('.projlist ul li').each(
+        function(idx, ele) {
+            if ($(ele).text() === projectName) {
+                $(ele).click();
+            }
+        });
 }
 
 function clearAllFiles() {

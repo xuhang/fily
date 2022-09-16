@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, Tray, Notification, 
     shell, ipcMain, globalShortcut, dialog, 
-    desktopCapturer, nativeTheme } = require('electron');
+    desktopCapturer, nativeTheme, nativeImage } = require('electron');
 const path = require('path');
 const child_process = require('child_process')
 const fs = require('fs');
@@ -11,10 +11,87 @@ let win
 let exec = child_process.exec;
 const systemType = os.type();
 
+// 菜单模版
+
+const appMenuTemplate = [
+    {
+        label: 'Projects',
+        submenu: [
+            {
+                label: 'New Project',
+                accelerator: 'Cmd+N',
+                click: () => {
+                    win.webContents.send('new-project-dialog', {  })
+                }
+            }, {
+                label: 'Rename Project'
+            }, {
+                label: 'Delete Project'
+            }, {
+                type: 'separator'
+            }, {
+                label: 'Archive'
+            }
+        ]
+    }, {
+        label: 'Files',
+        submenu: [
+            {
+                label: 'Import File'
+            }, {
+                label: 'Import Folder'
+            }
+        ]
+    }
+]
+
+const dockMenuTempalte = [
+    {
+        label: 'New Window',
+        click () {
+            console.log('New Window');
+        }
+    }, {
+        label: 'New Window with Settings',
+        submenu: [
+            { label: 'Basic' },
+            { label: 'Pro' }
+        ]
+    },
+    {
+        label: 'New Command...'
+    }
+];
+// 
+
+
+if (systemType === 'Darwin') {
+    appMenuTemplate.unshift({
+        label: app.getName(),
+        submenu: [
+            {
+                label: 'Quit',
+                accelerator: 'CmdOrCtrl+Q',
+                click() {
+                    app.quit();
+                }
+            }
+        ]
+    });
+}
+
 
 // 禁用HTTP缓存，需在ready事件之前
 app.commandLine.appendSwitch('--disable-http-cache')
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
+if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app.setAsDefaultProtocolClient('fily', process.execPath, [path.resolve(process.argv[1])])
+    }
+} else {
+    app.setAsDefaultProtocolClient('fily')
+}
 
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -32,7 +109,12 @@ if (!gotTheLock) {
     app.on('ready', createWindow);
 }
 
-
+app.on('open-url', (event, url) => {
+    console.log('url=', url);
+    projectName = url.substring(url.indexOf('//') + 2);
+    console.log('projectName =', projectName);
+    win.webContents.send('focus-on-project', {'projectName': projectName});
+})
 
 // 当全部窗口关闭时退出
 app.on('window-all-closed', () => {
@@ -118,14 +200,14 @@ ipcMain.on('close-window', (event, data) => {
         appId: "com.xuhang.electron.demo",
         icon: path.join(__dirname, './img/icon_512x512.png'),
         title: '正在关闭……',
-        body: '程序将在2秒后自动关闭ヾ(•ω•`)o'
+        body: 'Bye ヾ(•ω•`)o'
     }
     new Notification(notification).show()
 
     setTimeout(() => {
         console.log('fily is exiting ...')
         app.quit();
-    }, 2000);
+    }, 1000);
 
 });
 
@@ -145,6 +227,7 @@ function switchThumbImage(delta) {
     }
     thumbImageIndex = newIndex;
     let imgSrc = path.join(thumbImagePath, thumbImageIndex + ".jpeg");
+    // 主进程主动向渲染进程发送消息
     win.webContents.send('update-gallery-image', { 'src': imgSrc })
 }
 
@@ -162,8 +245,9 @@ function createWindow() {
             callback({url: url.replace('file:', 'https:')})
         }) */
 
-    // 隐藏菜单
-    Menu.setApplicationMenu(null)
+    // 隐藏菜单 Menu.setApplicationMenu(null)
+    const appMenu = Menu.buildFromTemplate(appMenuTemplate);
+    Menu.setApplicationMenu(appMenu)
 
     // 创建浏览器窗口并设置宽高
     win = new BrowserWindow({
@@ -188,6 +272,9 @@ function createWindow() {
 
     if (systemType === "Darwin") {
         app.dock.setIcon(path.join(__dirname, './img/icon_512x512.png'));
+        // 设置Dock菜单
+        const dockMenu = Menu.buildFromTemplate(dockMenuTempalte);
+        app.dock.setMenu(dockMenu);
         // win.on('blur', function() {
         //     const badgeString = app.dock.getBadge();
         //     if (badgeString === '') {
@@ -196,9 +283,6 @@ function createWindow() {
         //         app.docker.setBadge((parseInt(badgeString)+1).toString());
         //     }
         // });
-        setTimeout(function() {
-            app.dock.bounce();
-        }, 3000)
     }
 
     // win.setIgnoreMouseEvents(true)
@@ -210,11 +294,15 @@ function createWindow() {
     // webimReg(readPeopleId);
 
     // 加载页面3
-    // win.loadURL('https://newsn.net/category/node/')
     // win.loadFile('./page/projectRelatedFiles.html')
     win.loadFile('./page/projectRelatedFiles.html')
 
-    tray = new Tray(path.join(__dirname, "./img/fily.png"));
+    // Windows 任务栏图标菜单
+    // tray = new Tray(path.join(__dirname, "./img/fily.png"));
+    const trayImage = nativeImage.createFromPath(path.join(__dirname, "./img/icons.iconset/file20Template.png"));
+    trayImage.resize({ width: 16, height: 16 })
+    trayImage.setTemplateImage(true);
+    tray = new Tray(trayImage);
     const contextMenu = Menu.buildFromTemplate([
         { label: '退出', click: function() { app.quit() } }
     ])
@@ -235,23 +323,6 @@ function createWindow() {
 
     // win.setThumbnailToolTip('正在播放...');
 
-    // 取窗口的一部分作为缩略图（必须在屏幕可见范围内）
-    // x: 573,
-    // y: 0,
-    // width: 50,
-    // height: 40
-
-    // x: 0,
-    //     y: 30,
-    //     width: 150,
-    //     height: 120
-    // win.setThumbnailClip({
-    //     x: 0,
-    //     y: 30,
-    //     width: 1200,
-    //     height: 800
-    // });
-
     win.setThumbarButtons([{
         tooltip: '上一张',
         icon: path.join(__dirname, './resource/icos/pre.ico'),
@@ -263,8 +334,7 @@ function createWindow() {
     }])
 
     // win.setAlwaysOnTop(true, 'screen-saver');
-    win.webContents.toggleDevTools();
-    globalShortcut.register('F11', () => {
+    globalShortcut.register('Shift+I', () => {
         // 打开开发者工具 (开发者工具会影响窗口透明效果)
         win.webContents.toggleDevTools()
     });
@@ -275,5 +345,5 @@ function createWindow() {
         app.quit();
     });
 
-
+    win.setProgressBar(0.7);
 }
