@@ -522,3 +522,8 @@ function unify(time) {
     }
     return time;
 };
+
+
+function happy() {
+    ipcRenderer.send('load-chat-room', { });
+}

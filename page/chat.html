@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style/chat.css">
+    <style>
+        .click-on      {pointer-events: all}
+        .click-through {pointer-events: none}
+    </style>
+</head>
+<body>
+    <div class="container click-through">
+        
+        <div class="content click-through">
+            <!-- <div class="item item-center"><span>昨天 12:35</span></div> -->
+            <!-- <div class="item item-center"><span>你已添加了凡繁烦，现在可以开始聊天了。</span></div> -->
+        </div>
+        <div class="input-area click-on">
+            <textarea name="text" id="textarea"></textarea>
+            <div class="button-area">
+                <button id="send-btn" onclick="send()">发 送</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+    <script src="../script/tim-js.js"></script>
+    <script src="../script/chat.js"></script>
+</body>
+</html>

@@ -1,11 +1,12 @@
 const { app, BrowserWindow, Menu, Tray, Notification, 
-    shell, ipcMain, globalShortcut, dialog, 
+    shell, ipcMain, globalShortcut, dialog, screen,
     desktopCapturer, nativeTheme, nativeImage } = require('electron');
 const path = require('path');
 const child_process = require('child_process')
 const fs = require('fs');
 const os = require('os');
 const remoteMain = require('@electron/remote/main')
+
 
 let win
 let exec = child_process.exec;
@@ -145,9 +146,42 @@ ipcMain.on('change-view', (event, data) => {
     }
 })
 
-ipcMain.on('set-ignore-mouse-events', (event, ...args) => {
-    BrowserWindow.fromWebContents(event.sender).setIgnoreMouseEvents(...args)
-})
+// ipcMain.on('set-ignore-mouse-events', (event, ...args) => {
+//     BrowserWindow.fromWebContents(event.sender).setIgnoreMouseEvents(...args)
+// })
+
+let chatWindow
+ipcMain.on('load-chat-room', () => {
+    let scrWid = screen.getPrimaryDisplay().workAreaSize.width;
+    let scrHit = screen.getPrimaryDisplay().workAreaSize.height;
+    if (chatWindow !== undefined) {
+        return
+    }
+    chatWindow = new BrowserWindow({
+        x: scrWid - 400,
+        y: 0,
+        width: 400,
+        height: screen.getPrimaryDisplay().workAreaSize.height, 
+        titleBarStyle: 'customButtonsOnHover',
+        maximizable: false,
+        minimizable: false,
+        fullscreenable: false,
+        frame: false, // 是否有边框
+        resizable: false,        // 是否可调整大小
+        transparent: true, //是否透明
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true,
+            contextIsolation: false
+        }
+    })
+    chatWindow.loadFile('./page/chat.html')
+    // win.maximize()
+    chatWindow.webContents.toggleDevTools()
+    chatWindow.setAlwaysOnTop(true, 'screen-saver')
+    chatWindow.setIgnoreMouseEvents(true)
+    remoteMain.enable(chatWindow.webContents);
+});
 
 ipcMain.handle('dark-mode:toggle', () => {
     if (nativeTheme.shouldUseDarkColors) {
@@ -260,7 +294,7 @@ function createWindow() {
         fullscreenable: false,
         frame: false, // 是否有边框
         // resizable: true,        // 是否可调整大小
-        transparent: false, //是否透明
+        transparent: true, //是否透明
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
@@ -334,9 +368,10 @@ function createWindow() {
     }])
 
     // win.setAlwaysOnTop(true, 'screen-saver');
-    globalShortcut.register('Shift+I', () => {
-        // 打开开发者工具 (开发者工具会影响窗口透明效果)
-        win.webContents.toggleDevTools()
+
+    globalShortcut.register('Ctrl+W', () => {
+        win = null;
+        app.quit();
     });
 
     // 添加window关闭触发事件

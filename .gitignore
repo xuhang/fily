@@ -5,3 +5,4 @@ dist/
 output/
 .DS_Store
 out/
+/script/tim-config.js
