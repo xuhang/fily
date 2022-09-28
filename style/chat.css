@@ -83,13 +83,17 @@ body{
     font-size: 12px;
     padding: 2px 4px;
     color: #fff;
-    background-color: #dadada;
+    /* background-color: #dadada; */
     /* border-radius: 3px; */
     -moz-user-select:none; /*火狐*/
     -webkit-user-select:none; /*webkit浏览器*/
     -ms-user-select:none; /*IE10*/
     -khtml-user-select:none; /*早期浏览器*/
     user-select:none;
+}
+.item-center span span svg {
+    width: 15px;
+    height: 15px;
 }
 
 .avatar { 
@@ -110,7 +114,7 @@ body{
     background-color: #fff;
     border-radius: 15px;
     padding: 8px;
-    /* opacity: .8; */
+    opacity: .6;
 }
 textarea{
     flex: 1;

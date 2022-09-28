@@ -181,7 +181,13 @@ ipcMain.on('load-chat-room', () => {
     chatWindow.setAlwaysOnTop(true, 'screen-saver')
     chatWindow.setIgnoreMouseEvents(true)
     remoteMain.enable(chatWindow.webContents);
+
+    chatWindow.on('close', () => {
+        chatWindow = null;
+    });
 });
+
+
 
 ipcMain.handle('dark-mode:toggle', () => {
     if (nativeTheme.shouldUseDarkColors) {
@@ -221,6 +227,21 @@ ipcMain.on('show-notification', (event, data) => {
     }
     new Notification(notification).show()
 })
+
+// ipcMain.on('drag-start', (event, data) => {
+//     event.sender.startDrag({
+//         file: data.filePath,
+//         icon: data.fileIcon
+//     })
+//     return true
+// })
+
+// ipcMain.on('ondragstart', (event, filePath) => {
+//     event.sender.startDrag({
+//       file: path.join(__dirname, filePath),
+//       icon: './resource/icos/pre.ico',
+//     })
+// })
 
 
 ipcMain.on('close-window', (event, data) => {
@@ -298,7 +319,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
-            contextIsolation: false
+            contextIsolation: false,
+            preload: './script/preload.js'
         }
     })
     remoteMain.initialize()
@@ -373,7 +395,7 @@ function createWindow() {
         win = null;
         app.quit();
     });
-
+    win.webContents.toggleDevTools()
     // 添加window关闭触发事件
     win.on('close', () => {
         win = null;

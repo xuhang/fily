@@ -11,6 +11,7 @@ let svgCode = multiavatar(macId)
 var api = new TLSSigAPIv2.Api(SDKAppID, PriKey);
 var sig = api.genSig(macId, 86400*180);
 console.log(sig);
+let lastShowTime = 0;
 
 
 // SDK 进入 ready 状态时触发，接入侧监听此事件，然后可调用 SDK 发送消息等 API，使用 SDK 的各项功能
@@ -42,6 +43,7 @@ let onMessageReceived = function(event) {
         } else if (message.type === TIM.TYPES.MSG_LOCATION) {
         // 地理位置消息 - https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html#.LocationPayload
         } else if (message.type === TIM.TYPES.MSG_GRP_TIP) {
+            groupTip(message)
         // 群提示消息 - https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html#.GroupTipPayload
         } else if (message.type === TIM.TYPES.MSG_GRP_SYS_NOTICE) {
         // 群系统通知 - https://web.sdk.qcloud.com/im/doc/zh-cn/Message.html#.GroupSystemNoticePayload
@@ -59,16 +61,27 @@ let onNetStateChange = function(event) {
     // TIM.TYPES.NET_STATE_DISCONNECTED - 未接入网络。接入侧可根据此状态提示“当前网络不可用”。SDK 仍会继续重试，若用户网络恢复，SDK 会自动同步消息
 };
 
+function groupTip(tip) {
+    showTimeTag();
+    if (tip.payload.groupJoinType === 1 && tip.payload.operationType === TIM.TYPES.GRP_TIP_MBR_JOIN) {
+        console.log("有成员加入", tip.payload.operatorID)
+    }
+    let avatarCode = makeAvatar(tip.payload.operatorID);
+    let item = document.createElement('div');
+    item.className = 'item item-center';
+    item.innerHTML = `<span><span>${avatarCode}</span> 加入群聊`;
+    document.querySelector('.content').appendChild(item);
+}
 
-
-
-
+function sysNotice(notice) {
+    showTimeTag();
+}
 
 function receive(msg) {
     // let senderAvatarUrl = `https://api.multiavatar.com/${msg.macId}.png`
-    
+    showTimeTag();
     let payload = msg.payload;
-    let avatarCode = makeAvatar(payload.macId || 'administrator')
+    let avatarCode = makeAvatar(msg.from || 'administrator')
     let item = document.createElement('div');
     item.className = 'item item-left';
     item.innerHTML = `<div class="avatar">${avatarCode}</div><div class="bubble bubble-left">${payload.text}</div>`;
@@ -83,6 +96,17 @@ function receive(msg) {
 function makeAvatar(macId) {
     let svgCode = multiavatar(macId)
     return svgCode;
+}
+
+function showTimeTag() {
+    let now = new Date();
+    if (now.getTime() - lastShowTime >= 10 * 60 * 1000) {
+        let item = document.createElement('div');
+        item.className = 'item item-center';
+        item.innerHTML = `<span>${now.getHours()}:${now.getMinutes()}</span>`;
+        document.querySelector('.content').appendChild(item);
+        lastShowTime = now.getTime();
+    }
 }
 
 (function() {

@@ -68,6 +68,25 @@ function listProjectFiles(projectName) {
     }
 }
 
+// document.getElementsByClassName('file-item').ondragstart = (event) => {
+//     event.preventDefault();
+//     console.log('drag start...')
+//     let filePath = $(this).children('.abspath').text();
+//     window.electron.startDrag(filePath)
+// }
+
+// $(".file-item").on('dragstart', (event) => {
+//     event.preventDefault();
+//     console.log('drag start...')
+//     let filePath = $(this).children('.abspath').text();
+//     // ipcRenderer.send('drag-start', {'filePath': filePath, 'fileIcon': ''})
+//     window.electron.startDrag(filePath)
+// })
+
+// function invokeDrag(event) {
+//     event.preventDefault();
+//     console.log('drag start...')
+// }
 
 // 修改备注按钮
 $('.projitems').on('click', '.glyphicon-comment', function(e) {
@@ -353,7 +372,7 @@ function addFileItem(data) {
     let timeago = ago(getDate(data.createTime))
     let html = `
         <div class="item-wrapper" ${data.pin && data.pin == 1 ? 'style="border-color: #03b500;"' : ''}>
-            <div class="file-item">
+            <div class="file-item" draggable="true">
                 <span class="file-info">
                 <span class="filename"><i class="fa fa-${extensionIcon} fa-lg"></i> ${data.filename}</span>
                 <span class="create_time">${timeago}</span>
