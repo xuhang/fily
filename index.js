@@ -104,6 +104,13 @@ if (!gotTheLock) {
             if (win) {
                 if (win.isMinimized()) win.restore()
                 win.focus()
+                // windows上自定义协议是通过第二个实例启动的
+                if (systemType === 'Window_NT') {
+                    let lastCommand = commandLine[commandLine.length - 1];
+                    if (lastCommand.indexOf('fily://') == 0) {
+                        openUrl(lastCommand)
+                    }
+                }
             }
         })
         // app 启动创建窗口
@@ -112,9 +119,7 @@ if (!gotTheLock) {
 
 app.on('open-url', (event, url) => {
     console.log('url=', url);
-    projectName = url.substring(url.indexOf('//') + 2);
-    console.log('projectName =', projectName);
-    win.webContents.send('focus-on-project', {'projectName': projectName});
+    openUrl(url)
 })
 
 // 当全部窗口关闭时退出
@@ -271,6 +276,15 @@ ipcMain.on('close-window', (event, data) => {
 let thumbImageIndex = 1;
 const thumbImagePath = path.join(__dirname, './resource/pics')
 
+function openUrl(url) {
+    projectName = url.substring(url.indexOf('//') + 2);
+    if (projectName.indexOf('/') === projectName.length - 1) {
+        projectName = projectName.substring(0, projectName.length - 1);
+    }
+    console.log('projectName =', projectName);
+    win.webContents.send('focus-on-project', {'projectName': projectName});
+}
+
 function switchThumbImage(delta) {
     let imgs = fs.readdirSync(thumbImagePath);
     let newIndex = thumbImageIndex + delta
@@ -283,7 +297,8 @@ function switchThumbImage(delta) {
     thumbImageIndex = newIndex;
     let imgSrc = path.join(thumbImagePath, thumbImageIndex + ".jpeg");
     // 主进程主动向渲染进程发送消息
-    win.webContents.send('update-gallery-image', { 'src': imgSrc })
+    // win.webContents.send('update-gallery-image', { 'src': imgSrc })
+    win.webContents.send('show-next-project', { 'src': imgSrc })
 }
 
 function createWindow() {

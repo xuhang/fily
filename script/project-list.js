@@ -12,6 +12,19 @@ ipcRenderer.on('focus-on-project', (event, data) => {
     focusProject(data['projectName']);
 })
 
+ipcRenderer.on('show-next-project', (event, data) => {
+    let curProj = $(".projlist ul li.active")
+    let nextProj;
+    if (!!curProj[0]) {
+        nextProj = curProj.next()
+        if (!nextProj[0]) {
+            nextProj = $(".projlist ul li").first();
+        }
+    } else {
+        nextProj = $(".projlist ul li").first();
+    }
+    nextProj.click();
+})
 
 let currentProject = undefined;
 // 项目列表
