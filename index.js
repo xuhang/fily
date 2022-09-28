@@ -177,7 +177,7 @@ ipcMain.on('load-chat-room', () => {
     })
     chatWindow.loadFile('./page/chat.html')
     // win.maximize()
-    chatWindow.webContents.toggleDevTools()
+    // chatWindow.webContents.toggleDevTools()
     chatWindow.setAlwaysOnTop(true, 'screen-saver')
     chatWindow.setIgnoreMouseEvents(true)
     remoteMain.enable(chatWindow.webContents);
