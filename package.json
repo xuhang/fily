@@ -1,6 +1,6 @@
 {
   "name": "fily",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "🎉快速⚡️方便地管理🔧项目相关文件📁",
   "main": "index.js",
   "scripts": {
@@ -155,7 +155,14 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "protocols": [
+          {
+            "name": "Fily",
+            "schemes": ["fily"]
+          }
+        ]
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -171,7 +178,9 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "config": {
+            "mimeType": ["x-scheme-handler/fily"]
+          }
         },
         {
           "name": "@electron-forge/maker-rpm",
