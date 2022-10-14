@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, Tray, Notification, 
     shell, ipcMain, globalShortcut, dialog, screen,
-    desktopCapturer, nativeTheme, nativeImage } = require('electron');
+    desktopCapturer, nativeImage } = require('electron');
 const path = require('path');
 const child_process = require('child_process')
 const fs = require('fs');
@@ -361,8 +361,11 @@ function createWindow() {
         win = null;
         app.quit();
     });
-    // 打开开发者工具
-    //win.webContents.toggleDevTools()
+    globalShortcut.register('Ctrl+Shift+I', () => {
+        // 打开开发者工具
+        win.webContents.toggleDevTools()
+    })
+    
     // 添加window关闭触发事件
     win.on('close', () => {
         win = null;
