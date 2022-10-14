@@ -4,6 +4,12 @@ const remote = require('electron').remote || require('@electron/remote');
 const fs = require('fs');
 const path = require('path');
 
+window.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.shiftKey && event.key === 'I') {
+        remote.getCurrentWindow().toggleDevTools();
+    }
+})
+
 ipcRenderer.on('new-project-dialog', (event, data) => {
     showCreateProjectDialog();
 })

@@ -131,7 +131,11 @@ function showTimeTag() {
         e.returnValue = false;
         return false;
     }
-
+    window.addEventListener('keydown', (event) => {
+        if (event.ctrlKey && event.shiftKey && event.key === 'I') {
+            remote.getCurrentWindow().toggleDevTools();
+        }
+    })
 
     console.log('TIM = ', TIM)
     let options = { 

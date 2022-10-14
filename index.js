@@ -165,7 +165,7 @@ let chatWindow
 ipcMain.on('load-chat-room', () => {
     let scrWid = screen.getPrimaryDisplay().workAreaSize.width;
     let scrHit = screen.getPrimaryDisplay().workAreaSize.height;
-    if (chatWindow !== undefined) {
+    if (!!chatWindow) {
         return
     }
     chatWindow = new BrowserWindow({
@@ -190,10 +190,11 @@ ipcMain.on('load-chat-room', () => {
     // win.maximize()
     // chatWindow.webContents.toggleDevTools()
     chatWindow.setAlwaysOnTop(true, 'screen-saver')
-    chatWindow.setIgnoreMouseEvents(true)
+    // chatWindow.setIgnoreMouseEvents(true)
     remoteMain.enable(chatWindow.webContents);
 
     chatWindow.on('close', () => {
+        chatWindow.destroy();
         chatWindow = null;
     });
 });
@@ -303,7 +304,7 @@ function createWindow() {
             nodeIntegration: true, // 允许html页面上的javascipt代码访问nodejs 环境api代码的能力（与node集成的意思）
             enableRemoteModule: true, // 在渲染进程中使用remote模块，在高版本Electorn中还需要安装@electron/remote模块，然后调用initialize()和enable()方法。
             contextIsolation: false, // 阻止网站访问 Electron 的内部组件 和 预加载脚本可访问的高等级权限的API。禁用：网页js可以访问preload脚步的window全局对象；启用：无法访问全局window对象，通过contextBridge暴露的才能访问。
-            preload: './script/preload.js'
+            preload: path.join(__dirname, '/script/preload.js')
         }
     })
     remoteMain.initialize()
@@ -361,10 +362,10 @@ function createWindow() {
         win = null;
         app.quit();
     });
-    globalShortcut.register('Ctrl+Shift+I', () => {
+    // globalShortcut.register('Ctrl+Shift+I', () => {
         // 打开开发者工具
-        win.webContents.toggleDevTools()
-    })
+        // win.webContents.toggleDevTools()
+    // })
     
     // 添加window关闭触发事件
     win.on('close', () => {

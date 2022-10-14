@@ -159,7 +159,9 @@
         "protocols": [
           {
             "name": "Fily",
-            "schemes": ["fily"]
+            "schemes": [
+              "fily"
+            ]
           }
         ]
       },
@@ -179,7 +181,9 @@
         {
           "name": "@electron-forge/maker-deb",
           "config": {
-            "mimeType": ["x-scheme-handler/fily"]
+            "mimeType": [
+              "x-scheme-handler/fily"
+            ]
           }
         },
         {
